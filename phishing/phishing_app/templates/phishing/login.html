@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plateforme de formation cybersécurité</title>
+</head>
+<body style="font-family: Arial; background:#0d1117; color:white;">
+
+<h2>🔐 Simulation de page de connexion</h2>
+
+<p style="color:orange;">
+⚠️ EXERCICE PÉDAGOGIQUE — N’utilisez PAS de vrais identifiants
+</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Identifiant :</label><br>
+    <input type="text" name="username"><br><br>
+
+    <label>Mot de passe :</label><br>
+    <input type="password" name="password"><br><br>
+
+    <button type="submit">Se connecter (simulation)</button>
+</form>
+
+<p><a href="/rapport/">Voir le rapport pédagogique</a></p>
+
+</body>
+</html>

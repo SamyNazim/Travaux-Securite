@@ -1,0 +1,20 @@
+<h2>Rapport des tentatives</h2>
+
+<table border="1">
+<tr>
+    <th>Identifiant</th>
+    <th>Mot de passe</th>
+    <th>IP</th>
+    <th>Date</th>
+</tr>
+
+{% for t in tentatives %}
+<tr>
+    <td>{{ t.identifiant }}</td>
+    <td>{{ t.mot_de_passe }}</td>
+    <td>{{ t.adresse_ip }}</td>
+    <td>{{ t.date }}</td>
+</tr>
+{% endfor %}
+
+</table>
