@@ -1,29 +1,291 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Plateforme de formation cybersécurité</title>
+<meta charset="UTF-8">
+<title></title>
+
+<style>
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+:root {
+    --bg-color: #f3f6fb;
+    --card-bg: white;
+    --text-color: #111827;
+    --subtext-color: #6b7280;
+    --border-color: #d1d5db;
+    --primary-color: #2563eb;
+    --info-bg: #f9fafb;
+}
+
+body.dark {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f1f5f9;
+    --subtext-color: #94a3b8;
+    --border-color: #334155;
+    --primary-color: #3b82f6;
+    --info-bg: #1e293b;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: 0.3s ease;
+}
+
+/* Petite icône toggle */
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--card-bg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.container {
+    width: 420px;
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.logo-img {
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 60px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: var(--subtext-color);
+    margin-bottom: 25px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    background: transparent;
+    color: var(--text-color);
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.info-box {
+    background: var(--info-bg);
+    padding: 12px;
+    border-left: 4px solid var(--primary-color);
+    font-size: 12px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--subtext-color);
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.warning {
+    margin-top: 15px;
+    font-size: 12px;
+    text-align: center;
+    color: #b45309;
+}
+
+.logo-img {
+    margin-top: 30px;   
+    width: 100px;   /* augmente cette valeur */
+}
+
+</style>
 </head>
-<body style="font-family: Arial; background:#0d1117; color:white;">
 
-<h2>🔐 Simulation de page de connexion</h2>
+<body>
 
-<p style="color:orange;">
-⚠️ EXERCICE PÉDAGOGIQUE — N’utilisez PAS de vrais identifiants
-</p>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+    🌙
+</button>
 
-<form method="post">
-    {% csrf_token %}
+<div class="container">
 
-    <label>Identifiant :</label><br>
-    <input type="text" name="username"><br><br>
 
-    <label>Mot de passe :</label><br>
-    <input type="password" name="password"><br><br>
 
-    <button type="submit">Se connecter (simulation)</button>
-</form>
+<img src="{% static 'images/logo_facebook.png' %}" alt="Logo Sécurité" class="logo-img">
 
-<p><a href="/rapport/">Voir le rapport pédagogique</a></p>
+    <h2>Réinitialisation du mot de passe</h2>
+
+    <div class="subtitle">
+        Veuillez définir un nouveau mot de passe sécurisé.
+    </div>
+
+    <div class="info-box">
+        ✔ Minimum 8 caractères<br>
+        ✔ 1 majuscule et 1 chiffre<br>
+        ✔ Mot de passe unique recommandé
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Adresse Email</label>
+        <input type="email" name="username" required>
+
+        <label>Mot de passe actuel</label><br> <input type="password" name="password"><br><br>
+
+        <label>Nouveau mot de passe</label>
+        <input type="password" name="new_password1" id="new_password1" required>
+
+
+        <label>Confirmer le nouveau mot de passe</label>
+        <input type="password" name="new_password2" id="new_password2" required>
+
+        <button type="submit" class="submit-btn">
+            Mettre à jour le mot de passe
+        </button>
+    </form>
+
+<img src="{% static 'images/logo_meta.png' %}" 
+     alt="Logo Sécurité" 
+     class="logo-img">
+</div>
+
+<script>
+function toggleTheme() {
+    const body = document.body;
+    const button = document.getElementById("themeBtn");
+
+    body.classList.toggle("dark");
+
+    if (body.classList.contains("dark")) {
+        button.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+    } else {
+        button.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+    }
+}
+
+window.onload = function() {
+    const savedTheme = localStorage.getItem("theme");
+    const button = document.getElementById("themeBtn");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        button.textContent = "☀️";
+    }
+}
+
+// Validation mot de passe complet
+const form = document.querySelector('form');
+
+form.addEventListener('submit', function(event) {
+    const pwd1 = document.getElementById('new_password1').value;
+    const pwd2 = document.getElementById('new_password2').value;
+
+    // Vérifier correspondance
+    if (pwd1 !== pwd2) {
+        event.preventDefault();
+        alert("Les mots de passe ne correspondent pas !");
+        return;
+    }
+
+    // Vérifier minimum 8 caractères
+    if (pwd1.length < 8) {
+        event.preventDefault();
+        alert("Le mot de passe doit contenir au moins 8 caractères.");
+        return;
+    }
+
+    // Vérifier au moins une majuscule
+    if (!/[A-Z]/.test(pwd1)) {
+        event.preventDefault();
+        alert("Le mot de passe doit contenir au moins une lettre majuscule.");
+        return;
+    }
+
+    // Vérifier au moins un chiffre
+    if (!/[0-9]/.test(pwd1)) {
+        event.preventDefault();
+        alert("Le mot de passe doit contenir au moins un chiffre.");
+        return;
+    }
+
+});
+
+</script>
 
 </body>
 </html>

