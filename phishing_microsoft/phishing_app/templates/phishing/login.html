@@ -192,7 +192,7 @@ button.submit-btn:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px va
 
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<button type="button" class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
 
 <div class="container">
   <div class="card-header">
@@ -206,7 +206,9 @@ button.submit-btn:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px va
       <div class="field">
         <label for="username">Email ou numéro de téléphone</label>
         <div class="input-wrapper">
-          <input type="text" id="username" name="username" required autocomplete="username" oninput="validateUsername()">
+          <input type="text" id="username" name="username" required autocomplete="username"
+                 oninput="clearUsernameError()"
+                 onblur="validateUsername()">
         </div>
         <span class="field-error" id="usernameError"></span>
       </div>
@@ -233,19 +235,17 @@ button.submit-btn:focus-visible{box-shadow:0 0 0 2px var(--surface),0 0 0 4px va
     <div class="info-accordion" id="infoAccordion">
       <button type="button" class="info-trigger" onclick="toggleInfo()" aria-expanded="false" aria-controls="infoBody">
         <span class="info-trigger-text">
-          <!-- info circle icon -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/>
           </svg>
           Pourquoi dois-je me connecter&nbsp;?
         </span>
-        <!-- chevron -->
         <svg class="info-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
       <div class="info-body" id="infoBody" role="region">
-        Ce sondage a également pour objectif d’optimiser votre expérience utilisateur en nous permettant de vous proposer des recommandations et des conseils davantage adaptés à vos usages.
+        Ce sondage a également pour objectif d'optimiser votre expérience utilisateur en nous permettant de vous proposer des recommandations et des conseils davantage adaptés à vos usages.
       </div>
     </div>
     <!-- /Info accordion -->
@@ -296,27 +296,40 @@ function togglePassword() {
   }
 }
 
+function isValidUsername(val) {
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const phoneRe = /^\+?[\d\s\-().]{7,20}$/;
+  const digitsOnly = val.replace(/\D/g, "");
+  return emailRe.test(val) || (phoneRe.test(val) && digitsOnly.length >= 7);
+}
+
 function validateUsername() {
   const input = document.getElementById("username");
   const error = document.getElementById("usernameError");
   const val   = input.value.trim();
 
-  // Email regex (RFC-5322 simplified)
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  // Phone: optional leading +, then digits/spaces/dashes/parens, 7-15 digits total
-  const phoneRe = /^\+?[\d\s\-().]{7,20}$/;
-  const digitsOnly = val.replace(/\D/g, "");
-
+  // Champ vide : pas d'erreur (le required HTML s'en chargera au submit)
   if (!val) {
     setFieldError(input, error, "");
     return true;
   }
-  if (emailRe.test(val) || (phoneRe.test(val) && digitsOnly.length >= 7)) {
+
+  if (isValidUsername(val)) {
     setFieldError(input, error, "");
     return true;
   }
+
   setFieldError(input, error, "Veuillez entrer un email valide ou un numéro de téléphone valide.");
   return false;
+}
+
+// Efface l'erreur dès que l'utilisateur recommence à taper
+function clearUsernameError() {
+  const input = document.getElementById("username");
+  const error = document.getElementById("usernameError");
+  if (input.classList.contains("input-error")) {
+    setFieldError(input, error, "");
+  }
 }
 
 function setFieldError(input, errorEl, msg) {
